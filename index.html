@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+    <title>Piano Keyboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #1d1130;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated rainbow background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            transform: translate(-50%, -50%) scale(1);
+            background: conic-gradient(
+                red, orange, yellow, lime, cyan, blue, violet, red
+            );
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+            animation: rotateRainbow 15s linear infinite;
+            filter: blur(120px);
+        }
+
+        @keyframes rotateRainbow {
+            from { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+            to   { transform: translate(-50%, -50%) rotate(360deg) scale(1); }
+        }
+
+        @keyframes rotateRainbow {
+            0%, 100% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+            50%      { transform: translate(-50%, -50%) rotate(180deg) scale(1.05); }
+        }
+
+        @keyframes radiateRainbow {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1) rotate(180deg);
+                opacity: 0.8;
+            }
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: -20%;
+            background:
+                radial-gradient(
+                    circle at 30% 40%,
+                    rgba(120, 60, 255, 0.18),
+                    transparent 55%
+                ),
+                radial-gradient(
+                    circle at 70% 60%,
+                    rgba(255, 25, 94, 0.15),
+                    transparent 60%
+                ),
+                radial-gradient(
+                    circle at 50% 80%,
+                    rgba(90, 40, 200, 0.12),
+                    transparent 65%
+                );
+            filter: blur(80px);
+            opacity: 0.9;
+            z-index: 0;
+            pointer-events: none;
+            animation: ambientDrift 18s ease-in-out infinite;
+        }      
+        
+        @keyframes ambientDrift {
+            0% {
+                transform: scale(1) translate(0, 0);
+            }
+            50% {
+                transform: scale(1.08) translate(-3%, 2%);
+            }
+            100% {
+                transform: scale(1) translate(0, 0);
+            }
+        }        
+
+        /* Rainbow aura container */
+        .aura-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Individual rainbow aura pulse */
+        .rainbow-pulse {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.2);
+            pointer-events: none;
+            filter: blur(30px);
+            animation: smoothPulse 1.2s ease-out forwards;
+        }
+
+        @keyframes smoothPulse {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.2);
+                filter: blur(30px);
+            }
+            20% {
+                opacity: 0.8;
+                filter: blur(40px);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(2.5);
+                filter: blur(60px);
+            }
+        }
+
+        /* Ensure content is above the aura */
+        h1, .piano, .controls {
+            position: relative;
+            z-index: 1;
+        }
+
+        .title-text span {
+            display: inline-block;
+            animation: sineWave 2.5s ease-in-out infinite;
+        }
+
+        @keyframes sineWave {
+            0% {
+                transform: translateY(0);
+            }
+            25% {
+                transform: translateY(-10px);
+            }
+            50% {
+                transform: translateY(0);
+            }
+            75% {
+                transform: translateY(10px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: white;
+            margin-bottom: 40px;
+            font-size: 64px;
+            font-family: "Instrument Serif", serif;
+            font-weight: 400;
+            font-style: italic;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: wave 4s ease-in-out infinite;
+        }
+        
+        .controls {
+            margin-top: 50px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .waveform-btn {
+            position: relative;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.85);
+            border: none;
+            padding: 10px 26px;
+            font-size: 28px;
+            font-family: "Instrument Serif", serif;
+            font-style: italic;
+            cursor: pointer;
+            border-radius: 999px;
+            transition: transform 0.3s ease, color 0.3s ease;
+            z-index: 1;
+        }
+
+        /* aura */
+        .waveform-btn::before {
+            content: "";
+            position: absolute;
+            inset: -12px;
+            border-radius: 999px;
+            background: radial-gradient(
+                circle,
+                rgba(150, 180, 255, 0.6) 0%,
+                rgba(150, 180, 255, 0.35) 30%,
+                rgba(150, 180, 255, 0.15) 55%,
+                transparent 70%
+            );
+            filter: blur(8px);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: -1;
+        }
+
+        /* hover = aura appears */
+        .waveform-btn:hover::before {
+            opacity: 1;
+        }
+
+        /* active waveform = constant glow + slow pulse */
+        .waveform-btn.active::before {
+            opacity: 1;
+            animation: auraPulse 2.5s ease-in-out infinite;
+        }
+
+        .waveform-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .waveform-btn:active {
+            transform: translateY(0);
+        }
+
+        /* different waveform colors */
+        .waveform-btn[data-waveform="sine"]::before {
+            background: radial-gradient(circle, rgba(120,180,255,.7), transparent 70%);
+        }
+
+        .waveform-btn[data-waveform="square"]::before {
+            background: radial-gradient(circle, rgba(255,120,180,.7), transparent 70%);
+        }
+
+        .waveform-btn[data-waveform="sawtooth"]::before {
+            background: radial-gradient(circle, rgba(255,200,120,.7), transparent 70%);
+        }
+
+        .waveform-btn[data-waveform="triangle"]::before {
+            background: radial-gradient(circle, rgba(160,255,180,.7), transparent 70%);
+        }
+
+        @keyframes auraPulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.9;
+            }
+            50% {
+                transform: scale(1.15);
+                opacity: 1;
+            }
+            
+        }
+
+        .piano {
+            transform-origin: top center;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        @media (max-width: 950px) {
+            .piano, .controls {
+                transform: scale(0.8);
+            }
+        }
+
+        @media (max-width: 800px) {
+            .piano, .controls {
+                transform: scale(0.6);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .piano, .controls {
+                transform: scale(0.45);
+            }
+        }
+        
+
+        .keyboard {
+            display: flex;
+            gap: 2px;
+            position: relative;
+        }
+
+        .key {
+            position: relative;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.05s;
+        }
+
+        .white-key {
+            width: 3.75em;
+            height: 250px;
+            background: linear-gradient(to bottom, #ffffff 0%, #f0f0f0 100%);
+            border: 1px solid #888;
+            border-radius: 0 0 5px 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .white-key:active,
+        .white-key.active {
+            background: linear-gradient(to bottom, #e0e0e0 0%, #d0d0d0 100%);
+            transform: translateY(2px);
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+        }
+
+        .black-key {
+            width: 40px;
+            height: 160px;
+            background: linear-gradient(to bottom, #000000 0%, #2a2a2a 100%);
+            border: 1px solid #000;
+            border-radius: 0 0 3px 3px;
+            position: absolute;
+            z-index: 2;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding-bottom: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+        }
+
+        .black-key:active,
+        .black-key.active {
+            background: linear-gradient(to bottom, #1a1a1a 0%, #0a0a0a 100%);
+            transform: translateY(2px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.6);
+        }
+
+        /* Position black keys between white keys */
+        .black-key[data-key="83"] { left: 42px; }  /* C# */
+        .black-key[data-key="68"] { left: 104px; } /* D# */
+        .black-key[data-key="71"] { left: 228px; } /* F# */
+        .black-key[data-key="72"] { left: 290px; } /* G# */
+        .black-key[data-key="74"] { left: 352px; } /* A# */
+        .black-key[data-key="50"] { left: 476px; } /* C# */
+        .black-key[data-key="51"] { left: 538px; } /* D# */
+        .black-key[data-key="53"] { left: 662px; } /* F# */
+        .black-key[data-key="54"] { left: 724px; } /* G# */
+        .black-key[data-key="55"] { left: 786px; } /* A# */
+
+        .note-label {
+            font-size: 12px;
+            opacity: 0.6;
+        }
+
+        .key-label {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .black-key .note-label,
+        .black-key .key-label {
+            font-size: 11px;
+        }
+
+    </style>
+</head>
+<body>
+    <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <filter id="grain">
+        <feTurbulence
+        type="fractalNoise"
+        baseFrequency="0.8"
+        numOctaves="4"
+        stitchTiles="stitch" />
+    </filter>
+    </svg>    
+    <div class="aura-container" id="auraContainer"></div>
+
+    <h1 class="title-text">synthesize</h1>
+    
+    <div class="piano">
+        <div class="keyboard">
+            <!-- White Keys -->
+            <div class="key white-key" data-key="90">
+                <span class="note-label">C</span>
+                <span class="key-label">Z</span>
+            </div>
+            <div class="key white-key" data-key="88">
+                <span class="note-label">D</span>
+                <span class="key-label">X</span>
+            </div>
+            <div class="key white-key" data-key="67">
+                <span class="note-label">E</span>
+                <span class="key-label">C</span>
+            </div>
+            <div class="key white-key" data-key="86">
+                <span class="note-label">F</span>
+                <span class="key-label">V</span>
+            </div>
+            <div class="key white-key" data-key="66">
+                <span class="note-label">G</span>
+                <span class="key-label">B</span>
+            </div>
+            <div class="key white-key" data-key="78">
+                <span class="note-label">A</span>
+                <span class="key-label">N</span>
+            </div>
+            <div class="key white-key" data-key="77">
+                <span class="note-label">B</span>
+                <span class="key-label">M</span>
+            </div>
+            <div class="key white-key" data-key="81">
+                <span class="note-label">C</span>
+                <span class="key-label">Q</span>
+            </div>
+            <div class="key white-key" data-key="87">
+                <span class="note-label">D</span>
+                <span class="key-label">W</span>
+            </div>
+            <div class="key white-key" data-key="69">
+                <span class="note-label">E</span>
+                <span class="key-label">E</span>
+            </div>
+            <div class="key white-key" data-key="82">
+                <span class="note-label">F</span>
+                <span class="key-label">R</span>
+            </div>
+            <div class="key white-key" data-key="84">
+                <span class="note-label">G</span>
+                <span class="key-label">T</span>
+            </div>
+            <div class="key white-key" data-key="89">
+                <span class="note-label">A</span>
+                <span class="key-label">Y</span>
+            </div>
+            <div class="key white-key" data-key="85">
+                <span class="note-label">B</span>
+                <span class="key-label">U</span>
+            </div>
+
+            <!-- Black Keys -->
+            <div class="key black-key" data-key="83">
+                <span class="note-label">C#</span>
+                <span class="key-label">S</span>
+            </div>
+            <div class="key black-key" data-key="68">
+                <span class="note-label">D#</span>
+                <span class="key-label">D</span>
+            </div>
+            <div class="key black-key" data-key="71">
+                <span class="note-label">F#</span>
+                <span class="key-label">G</span>
+            </div>
+            <div class="key black-key" data-key="72">
+                <span class="note-label">G#</span>
+                <span class="key-label">H</span>
+            </div>
+            <div class="key black-key" data-key="74">
+                <span class="note-label">A#</span>
+                <span class="key-label">J</span>
+            </div>
+            <div class="key black-key" data-key="50">
+                <span class="note-label">C#</span>
+                <span class="key-label">2</span>
+            </div>
+            <div class="key black-key" data-key="51">
+                <span class="note-label">D#</span>
+                <span class="key-label">3</span>
+            </div>
+            <div class="key black-key" data-key="53">
+                <span class="note-label">F#</span>
+                <span class="key-label">5</span>
+            </div>
+            <div class="key black-key" data-key="54">
+                <span class="note-label">G#</span>
+                <span class="key-label">6</span>
+            </div>
+            <div class="key black-key" data-key="55">
+                <span class="note-label">A#</span>
+                <span class="key-label">7</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="waveform-btn active" data-waveform="sine">SINE</button>
+        <button class="waveform-btn" data-waveform="square">SQUARE</button>
+        <button class="waveform-btn" data-waveform="sawtooth">SAWTOOTH</button>
+        <button class="waveform-btn" data-waveform="triangle">TRIANGLE</button>
+    </div>
+    
+
+    <script src="keyboard.js"></script>
+    <script src="title.js" defer></script>
+    <script>
+        const auraContainer = document.getElementById('auraContainer');
+
+        // Map each key to a specific rainbow color
+        const keyColors = {
+            // Lower octave (Z-M)
+            '90': 'radial-gradient(circle, rgba(255, 0, 0, 0.6) 0%, rgba(255, 0, 0, 0.3) 40%, rgba(255, 0, 0, 0) 70%)', // C - Red
+            '83': 'radial-gradient(circle, rgba(255, 80, 0, 0.6) 0%, rgba(255, 80, 0, 0.3) 40%, rgba(255, 80, 0, 0) 70%)', // C# - Red-Orange
+            '88': 'radial-gradient(circle, rgba(255, 154, 0, 0.6) 0%, rgba(255, 154, 0, 0.3) 40%, rgba(255, 154, 0, 0) 70%)', // D - Orange
+            '68': 'radial-gradient(circle, rgba(255, 205, 0, 0.6) 0%, rgba(255, 205, 0, 0.3) 40%, rgba(255, 205, 0, 0) 70%)', // D# - Yellow-Orange
+            '67': 'radial-gradient(circle, rgba(255, 255, 0, 0.6) 0%, rgba(255, 255, 0, 0.3) 40%, rgba(255, 255, 0, 0) 70%)', // E - Yellow
+            '86': 'radial-gradient(circle, rgba(150, 255, 0, 0.6) 0%, rgba(150, 255, 0, 0.3) 40%, rgba(150, 255, 0, 0) 70%)', // F - Yellow-Green
+            '71': 'radial-gradient(circle, rgba(0, 255, 0, 0.6) 0%, rgba(0, 255, 0, 0.3) 40%, rgba(0, 255, 0, 0) 70%)', // F# - Green
+            '66': 'radial-gradient(circle, rgba(0, 255, 150, 0.6) 0%, rgba(0, 255, 150, 0.3) 40%, rgba(0, 255, 150, 0) 70%)', // G - Green-Cyan
+            '72': 'radial-gradient(circle, rgba(0, 200, 255, 0.6) 0%, rgba(0, 200, 255, 0.3) 40%, rgba(0, 200, 255, 0) 70%)', // G# - Cyan
+            '78': 'radial-gradient(circle, rgba(0, 100, 255, 0.6) 0%, rgba(0, 100, 255, 0.3) 40%, rgba(0, 100, 255, 0) 70%)', // A - Blue
+            '74': 'radial-gradient(circle, rgba(75, 0, 230, 0.6) 0%, rgba(75, 0, 230, 0.3) 40%, rgba(75, 0, 230, 0) 70%)', // A# - Indigo
+            '77': 'radial-gradient(circle, rgba(148, 0, 211, 0.6) 0%, rgba(148, 0, 211, 0.3) 40%, rgba(148, 0, 211, 0) 70%)', // B - Violet
+            
+            // Upper octave (Q-U)
+            '81': 'radial-gradient(circle, rgba(255, 0, 0, 0.6) 0%, rgba(255, 0, 0, 0.3) 40%, rgba(255, 0, 0, 0) 70%)', // C - Red
+            '50': 'radial-gradient(circle, rgba(255, 80, 0, 0.6) 0%, rgba(255, 80, 0, 0.3) 40%, rgba(255, 80, 0, 0) 70%)', // C# - Red-Orange
+            '87': 'radial-gradient(circle, rgba(255, 154, 0, 0.6) 0%, rgba(255, 154, 0, 0.3) 40%, rgba(255, 154, 0, 0) 70%)', // D - Orange
+            '51': 'radial-gradient(circle, rgba(255, 205, 0, 0.6) 0%, rgba(255, 205, 0, 0.3) 40%, rgba(255, 205, 0, 0) 70%)', // D# - Yellow-Orange
+            '69': 'radial-gradient(circle, rgba(255, 255, 0, 0.6) 0%, rgba(255, 255, 0, 0.3) 40%, rgba(255, 255, 0, 0) 70%)', // E - Yellow
+            '82': 'radial-gradient(circle, rgba(150, 255, 0, 0.6) 0%, rgba(150, 255, 0, 0.3) 40%, rgba(150, 255, 0, 0) 70%)', // F - Yellow-Green
+            '53': 'radial-gradient(circle, rgba(0, 255, 0, 0.6) 0%, rgba(0, 255, 0, 0.3) 40%, rgba(0, 255, 0, 0) 70%)', // F# - Green
+            '84': 'radial-gradient(circle, rgba(0, 255, 150, 0.6) 0%, rgba(0, 255, 150, 0.3) 40%, rgba(0, 255, 150, 0) 70%)', // G - Green-Cyan
+            '54': 'radial-gradient(circle, rgba(0, 200, 255, 0.6) 0%, rgba(0, 200, 255, 0.3) 40%, rgba(0, 200, 255, 0) 70%)', // G# - Cyan
+            '89': 'radial-gradient(circle, rgba(0, 100, 255, 0.6) 0%, rgba(0, 100, 255, 0.3) 40%, rgba(0, 100, 255, 0) 70%)', // A - Blue
+            '55': 'radial-gradient(circle, rgba(75, 0, 230, 0.6) 0%, rgba(75, 0, 230, 0.3) 40%, rgba(75, 0, 230, 0) 70%)', // A# - Indigo
+            '85': 'radial-gradient(circle, rgba(148, 0, 211, 0.6) 0%, rgba(148, 0, 211, 0.3) 40%, rgba(148, 0, 211, 0) 70%)', // B - Violet
+        };
+
+        function createRainbowPulse(x, y, keyCode) {
+            const pulse = document.createElement('div');
+            pulse.className = 'rainbow-pulse';
+            pulse.style.left = x + 'px';
+            pulse.style.top = y + 'px';
+            
+            // Set the color based on the key pressed
+            if (keyColors[keyCode]) {
+                pulse.style.background = keyColors[keyCode];
+            }
+            
+            auraContainer.appendChild(pulse);
+            
+            // Remove the pulse after animation completes
+            setTimeout(() => {
+                pulse.remove();
+            }, 1200);
+        }
+
+        // Trigger rainbow aura pulse on key press
+        window.addEventListener('keydown', function(event) {
+            const key = (event.detail || event.which).toString();
+            const keyElement = document.querySelector(`[data-key="${key}"]`);
+            
+            if (keyElement) {
+                const rect = keyElement.getBoundingClientRect();
+                const x = rect.left + rect.width / 2;
+                const y = rect.top + rect.height / 2;
+                createRainbowPulse(x, y, key);
+            }
+        });
+
+        // Also trigger on mouse clicks
+        document.querySelectorAll('.key').forEach(key => {
+            key.addEventListener('mousedown', (e) => {
+                const keyCode = key.dataset.key;
+                const rect = key.getBoundingClientRect();
+                const x = rect.left + rect.width / 2;
+                const y = rect.top + rect.height / 2;
+                createRainbowPulse(x, y, keyCode);
+            });
+        });
+    </script>
+</body>
+</html>
