@@ -6,8 +6,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap" rel="stylesheet">
 
-    <title>Piano Keyboard</title>
+
+    <title>Advanced Synthesizer</title>
     <style>
         * {
             margin: 0;
@@ -25,7 +27,13 @@
             justify-content: center;
             padding: 20px;
             position: relative;
-            overflow: hidden;
+            overflow-x: hidden;
+        }
+
+        /* CSS custom properties for rainbow control */
+        :root {
+            --rainbow-opacity: 0.15;
+            --rainbow-speed: 15s;
         }
 
         /* Animated rainbow background */
@@ -40,32 +48,16 @@
             background: conic-gradient(
                 red, orange, yellow, lime, cyan, blue, violet, red
             );
-            opacity: 0.15;
+            opacity: var(--rainbow-opacity);
             pointer-events: none;
             z-index: 0;
-            animation: rotateRainbow 15s linear infinite;
+            animation: rotateRainbow var(--rainbow-speed) linear infinite;
             filter: blur(120px);
-        }
-
-        @keyframes rotateRainbow {
-            from { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
-            to   { transform: translate(-50%, -50%) rotate(360deg) scale(1); }
         }
 
         @keyframes rotateRainbow {
             0%, 100% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
             50%      { transform: translate(-50%, -50%) rotate(180deg) scale(1.05); }
-        }
-
-        @keyframes radiateRainbow {
-            0%, 100% {
-                transform: translate(-50%, -50%) scale(1) rotate(0deg);
-                opacity: 0.6;
-            }
-            50% {
-                transform: translate(-50%, -50%) scale(1.1) rotate(180deg);
-                opacity: 0.8;
-            }
         }
 
         body::after {
@@ -107,7 +99,6 @@
             }
         }        
 
-        /* Rainbow aura container */
         .aura-container {
             position: fixed;
             top: 0;
@@ -118,7 +109,6 @@
             z-index: 0;
         }
 
-        /* Individual rainbow aura pulse */
         .rainbow-pulse {
             position: absolute;
             width: 400px;
@@ -148,60 +138,269 @@
             }
         }
 
-        /* Ensure content is above the aura */
-        h1, .piano, .controls {
+        h1, .piano, .controls, .keyboard-container {
             position: relative;
             z-index: 1;
         }
 
-        .title-text span {
-            display: inline-block;
-            animation: sineWave 2.5s ease-in-out infinite;
-        }
-
-        @keyframes sineWave {
-            0% {
-                transform: translateY(0);
-            }
-            25% {
-                transform: translateY(-10px);
-            }
-            50% {
-                transform: translateY(0);
-            }
-            75% {
-                transform: translateY(10px);
-            }
-            100% {
-                transform: translateY(0);
-            }
-        }
-
         h1 {
             color: white;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             font-size: 64px;
             font-family: "Instrument Serif", serif;
             font-weight: 400;
             font-style: italic;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            animation: wave 4s ease-in-out infinite;
+        }
+
+        /* Wavy title animation */
+        .title-text span {
+            display: inline-block;
+            animation: titleWave 2s ease-in-out infinite;
+        }
+
+        @keyframes titleWave {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-10px) rotate(2deg);
+            }
+            50% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            75% {
+                transform: translateY(8px) rotate(-1deg);
+            }
         }
         
         .controls {
-            margin-top: 50px;
+            margin-top: 30px;
             display: flex;
             gap: 10px;
             align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
-        .waveform-btn {
+        .keyboard-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-top: 20px;
+            max-width: 1400px;
+        }
+
+        .piano-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .keyboard-top-controls, .keyboard-bottom-controls {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .keyboard-top-controls {
+            margin-bottom: 5px;
+        }
+
+        .keyboard-bottom-controls {
+            margin-top: 5px;
+        }
+
+        .left-side-controls, .right-side-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-width: 200px;
+            max-width: 250px;
+        }
+
+        .control-section {
+            background: rgba(30, 20, 50, 0.6);
+            padding: 15px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .control-section h3 {
+            color: rgba(255, 255, 255, 0.9);
+            font-family: "DM Mono", monospace;
+            font-weight: 400;
+            font-style: normal;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .parameter-control {
+            margin: 10px 0;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .parameter-control label {
+            display: block;
+            margin-bottom: 3px;
+            font-family: "DM Mono", monospace;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        .parameter-control input[type="range"] {
+            width: 100%;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .parameter-control input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: rgba(150, 180, 255, 0.9);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(150, 180, 255, 0.6);
+        }
+
+        .parameter-control input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: rgba(150, 180, 255, 0.9);
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 8px rgba(150, 180, 255, 0.6);
+        }
+
+        .parameter-value {
+            display: inline-block;
+            margin-left: 8px;
+            font-weight: bold;
+            color: rgba(150, 180, 255, 1);
+            font-size: 13px;
+        }
+
+        .compact-select {
+            width: 100%;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 3px;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        .adsr-visual {
+            margin: 10px 0;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .adsr-visual svg {
+            border-radius: 5px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+            margin-left: 8px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider-toggle {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: .4s;
+            border-radius: 20px;
+        }
+
+        .slider-toggle:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider-toggle {
+            background-color: rgba(150, 180, 255, 0.8);
+        }
+
+        input:checked + .slider-toggle:before {
+            transform: translateX(20px);
+        }
+
+        /* Responsive layout */
+        @media (max-width: 1200px) {
+            .keyboard-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+            
+            .left-side-controls, .right-side-controls {
+                flex-direction: row;
+                max-width: none;
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .control-section {
+                min-width: 180px;
+                margin: 5px;
+            }
+        }
+
+        @media (max-width: 800px) {
+            .left-side-controls, .right-side-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .control-section {
+                max-width: 300px;
+                width: 100%;
+            }
+        }
+
+        .waveform-btn, .synth-mode-btn {
             position: relative;
             background: transparent;
             color: rgba(255, 255, 255, 0.85);
             border: none;
             padding: 10px 26px;
-            font-size: 28px;
+            font-size: 20px;
             font-family: "Instrument Serif", serif;
             font-style: italic;
             cursor: pointer;
@@ -210,8 +409,7 @@
             z-index: 1;
         }
 
-        /* aura */
-        .waveform-btn::before {
+        .waveform-btn::before, .synth-mode-btn::before {
             content: "";
             position: absolute;
             inset: -12px;
@@ -229,40 +427,13 @@
             z-index: -1;
         }
 
-        /* hover = aura appears */
-        .waveform-btn:hover::before {
+        .waveform-btn:hover::before, .synth-mode-btn:hover::before {
             opacity: 1;
         }
 
-        /* active waveform = constant glow + slow pulse */
-        .waveform-btn.active::before {
+        .waveform-btn.active::before, .synth-mode-btn.active::before {
             opacity: 1;
             animation: auraPulse 2.5s ease-in-out infinite;
-        }
-
-        .waveform-btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .waveform-btn:active {
-            transform: translateY(0);
-        }
-
-        /* different waveform colors */
-        .waveform-btn[data-waveform="sine"]::before {
-            background: radial-gradient(circle, rgba(120,180,255,.7), transparent 70%);
-        }
-
-        .waveform-btn[data-waveform="square"]::before {
-            background: radial-gradient(circle, rgba(255,120,180,.7), transparent 70%);
-        }
-
-        .waveform-btn[data-waveform="sawtooth"]::before {
-            background: radial-gradient(circle, rgba(255,200,120,.7), transparent 70%);
-        }
-
-        .waveform-btn[data-waveform="triangle"]::before {
-            background: radial-gradient(circle, rgba(160,255,180,.7), transparent 70%);
         }
 
         @keyframes auraPulse {
@@ -274,7 +445,102 @@
                 transform: scale(1.15);
                 opacity: 1;
             }
-            
+        }
+
+        .parameter-control {
+            margin: 15px 0;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .parameter-control label {
+            display: block;
+            margin-bottom: 5px;
+            font-family: "DM Mono", monospace;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        .parameter-control input[type="range"] {
+            width: 200px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .parameter-control input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: rgba(150, 180, 255, 0.9);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(150, 180, 255, 0.6);
+        }
+
+        .parameter-control input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            background: rgba(150, 180, 255, 0.9);
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 10px rgba(150, 180, 255, 0.6);
+        }
+
+        .parameter-value {
+            display: inline-block;
+            margin-left: 10px;
+            font-weight: bold;
+            color: rgba(150, 180, 255, 1);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            margin-left: 10px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider-toggle {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider-toggle:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider-toggle {
+            background-color: rgba(150, 180, 255, 0.8);
+        }
+
+        input:checked + .slider-toggle:before {
+            transform: translateX(26px);
         }
 
         .piano {
@@ -282,6 +548,7 @@
             border-radius: 10px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
+
         @media (max-width: 950px) {
             .piano, .controls {
                 transform: scale(0.8);
@@ -299,7 +566,6 @@
                 transform: scale(0.45);
             }
         }
-        
 
         .keyboard {
             display: flex;
@@ -359,17 +625,17 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.6);
         }
 
-        /* Position black keys between white keys */
-        .black-key[data-key="83"] { left: 42px; }  /* C# */
-        .black-key[data-key="68"] { left: 104px; } /* D# */
-        .black-key[data-key="71"] { left: 228px; } /* F# */
-        .black-key[data-key="72"] { left: 290px; } /* G# */
-        .black-key[data-key="74"] { left: 352px; } /* A# */
-        .black-key[data-key="50"] { left: 476px; } /* C# */
-        .black-key[data-key="51"] { left: 538px; } /* D# */
-        .black-key[data-key="53"] { left: 662px; } /* F# */
-        .black-key[data-key="54"] { left: 724px; } /* G# */
-        .black-key[data-key="55"] { left: 786px; } /* A# */
+        /* Position black keys */
+        .black-key[data-key="83"] { left: 42px; }
+        .black-key[data-key="68"] { left: 104px; }
+        .black-key[data-key="71"] { left: 228px; }
+        .black-key[data-key="72"] { left: 290px; }
+        .black-key[data-key="74"] { left: 352px; }
+        .black-key[data-key="50"] { left: 476px; }
+        .black-key[data-key="51"] { left: 538px; }
+        .black-key[data-key="53"] { left: 662px; }
+        .black-key[data-key="54"] { left: 724px; }
+        .black-key[data-key="55"] { left: 786px; }
 
         .note-label {
             font-size: 12px;
@@ -389,165 +655,304 @@
     </style>
 </head>
 <body>
-    <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
-    <filter id="grain">
-        <feTurbulence
-        type="fractalNoise"
-        baseFrequency="0.8"
-        numOctaves="4"
-        stitchTiles="stitch" />
-    </filter>
-    </svg>    
     <div class="aura-container" id="auraContainer"></div>
 
     <h1 class="title-text">synthesize</h1>
-    
-    <div class="piano">
-        <div class="keyboard">
-            <!-- White Keys -->
-            <div class="key white-key" data-key="90">
-                <span class="note-label">C</span>
-                <span class="key-label">Z</span>
-            </div>
-            <div class="key white-key" data-key="88">
-                <span class="note-label">D</span>
-                <span class="key-label">X</span>
-            </div>
-            <div class="key white-key" data-key="67">
-                <span class="note-label">E</span>
-                <span class="key-label">C</span>
-            </div>
-            <div class="key white-key" data-key="86">
-                <span class="note-label">F</span>
-                <span class="key-label">V</span>
-            </div>
-            <div class="key white-key" data-key="66">
-                <span class="note-label">G</span>
-                <span class="key-label">B</span>
-            </div>
-            <div class="key white-key" data-key="78">
-                <span class="note-label">A</span>
-                <span class="key-label">N</span>
-            </div>
-            <div class="key white-key" data-key="77">
-                <span class="note-label">B</span>
-                <span class="key-label">M</span>
-            </div>
-            <div class="key white-key" data-key="81">
-                <span class="note-label">C</span>
-                <span class="key-label">Q</span>
-            </div>
-            <div class="key white-key" data-key="87">
-                <span class="note-label">D</span>
-                <span class="key-label">W</span>
-            </div>
-            <div class="key white-key" data-key="69">
-                <span class="note-label">E</span>
-                <span class="key-label">E</span>
-            </div>
-            <div class="key white-key" data-key="82">
-                <span class="note-label">F</span>
-                <span class="key-label">R</span>
-            </div>
-            <div class="key white-key" data-key="84">
-                <span class="note-label">G</span>
-                <span class="key-label">T</span>
-            </div>
-            <div class="key white-key" data-key="89">
-                <span class="note-label">A</span>
-                <span class="key-label">Y</span>
-            </div>
-            <div class="key white-key" data-key="85">
-                <span class="note-label">B</span>
-                <span class="key-label">U</span>
+
+    <!-- Keyboard with side controls -->
+    <div class="keyboard-container">
+        <!-- Left Side: Tremolo & Synth-specific Controls -->
+        <div class="left-side-controls">
+            <!-- LFO (Tremolo) -->
+            <div class="control-section">
+                <h3>LFO</h3>
+                <div class="parameter-control">
+                    <label>enable
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="lfo-toggle">
+                            <span class="slider-toggle"></span>
+                        </label>
+                    </label>
+                </div>
+                <div class="parameter-control">
+                    <label>frequency: <span class="parameter-value" id="lfo-freq-value">5.0</span>Hz</label>
+                    <input type="range" id="lfo-freq" min="0.1" max="20" step="0.1" value="5">
+                </div>
+                <div class="parameter-control">
+                    <label>depth: <span class="parameter-value" id="lfo-depth-value">0.30</span></label>
+                    <input type="range" id="lfo-depth" min="0" max="1" step="0.01" value="0.3">
+                </div>
             </div>
 
-            <!-- Black Keys -->
-            <div class="key black-key" data-key="83">
-                <span class="note-label">C#</span>
-                <span class="key-label">S</span>
+            <!-- Additive Synthesis -->
+            <div class="control-section" id="additive-controls">
+                <h3>Additive</h3>
+                <div class="parameter-control">
+                    <label>partials: <span class="parameter-value" id="num-partials-value">5</span></label>
+                    <input type="range" id="num-partials" min="1" max="8" step="1" value="5">
+                </div>
             </div>
-            <div class="key black-key" data-key="68">
-                <span class="note-label">D#</span>
-                <span class="key-label">D</span>
+
+            <!-- FM Synthesis -->
+            <div class="control-section" id="fm-controls">
+                <h3>FM</h3>
+                <div class="parameter-control">
+                    <label>ratio: <span class="parameter-value" id="fm-ratio-value">2.00</span></label>
+                    <input type="range" id="fm-ratio" min="0.1" max="10" step="0.1" value="2.0">
+                </div>
+                <div class="parameter-control">
+                    <label>index: <span class="parameter-value" id="fm-index-value">100</span></label>
+                    <input type="range" id="fm-index" min="0" max="1000" step="10" value="100">
+                </div>
+                <div class="parameter-control">
+                    <label>mod wave:</label>
+                    <select id="fm-mod-waveform" class="compact-select">
+                        <option value="sine">sine</option>
+                        <option value="square">square</option>
+                        <option value="sawtooth">sawtooth</option>
+                        <option value="triangle">triangle</option>
+                    </select>
+                </div>
             </div>
-            <div class="key black-key" data-key="71">
-                <span class="note-label">F#</span>
-                <span class="key-label">G</span>
+
+            <!-- AM Synthesis -->
+            <div class="control-section" id="am-controls">
+                <h3>AM</h3>
+                <div class="parameter-control">
+                    <label>frequency: <span class="parameter-value" id="am-mod-freq-value">4.0</span>Hz</label>
+                    <input type="range" id="am-mod-freq" min="0.1" max="500" step="0.1" value="4.0">
+                </div>
+                <div class="parameter-control">
+                    <label>depth: <span class="parameter-value" id="am-mod-depth-value">80</span>%</label>
+                    <input type="range" id="am-mod-depth" min="0" max="100" step="1" value="80">
+                </div>
+                <div class="parameter-control">
+                    <label>phase: <span class="parameter-value" id="am-phase-offset-value">0</span>°</label>
+                    <input type="range" id="am-phase-offset" min="0" max="360" step="1" value="0">
+                </div>
+                <div class="parameter-control">
+                    <label>mod wave:</label>
+                    <select id="am-mod-waveform" class="compact-select">
+                        <option value="sine">sine</option>
+                        <option value="square">square</option>
+                        <option value="sawtooth">sawtooth</option>
+                        <option value="triangle">triangle</option>
+                    </select>
+                </div>
             </div>
-            <div class="key black-key" data-key="72">
-                <span class="note-label">G#</span>
-                <span class="key-label">H</span>
+        </div>
+
+        <!-- Center: Piano Keyboard with integrated controls -->
+        <div class="piano-section">
+            <!-- Synthesis Mode Selection (close above keyboard) -->
+            <div class="keyboard-top-controls">
+                <button class="synth-mode-btn active" data-mode="simple">SIMPLE</button>
+                <button class="synth-mode-btn" data-mode="additive">ADDITIVE</button>
+                <button class="synth-mode-btn" data-mode="fm">FM</button>
+                <button class="synth-mode-btn" data-mode="am">AM</button>
             </div>
-            <div class="key black-key" data-key="74">
-                <span class="note-label">A#</span>
-                <span class="key-label">J</span>
+
+            <div class="piano">
+                <div class="keyboard">
+                    <!-- White Keys -->
+                    <div class="key white-key" data-key="90">
+                        <span class="note-label">C</span>
+                        <span class="key-label">Z</span>
+                    </div>
+                    <div class="key white-key" data-key="88">
+                        <span class="note-label">D</span>
+                        <span class="key-label">X</span>
+                    </div>
+                    <div class="key white-key" data-key="67">
+                        <span class="note-label">E</span>
+                        <span class="key-label">C</span>
+                    </div>
+                    <div class="key white-key" data-key="86">
+                        <span class="note-label">F</span>
+                        <span class="key-label">V</span>
+                    </div>
+                    <div class="key white-key" data-key="66">
+                        <span class="note-label">G</span>
+                        <span class="key-label">B</span>
+                    </div>
+                    <div class="key white-key" data-key="78">
+                        <span class="note-label">A</span>
+                        <span class="key-label">N</span>
+                    </div>
+                    <div class="key white-key" data-key="77">
+                        <span class="note-label">B</span>
+                        <span class="key-label">M</span>
+                    </div>
+                    <div class="key white-key" data-key="81">
+                        <span class="note-label">C</span>
+                        <span class="key-label">Q</span>
+                    </div>
+                    <div class="key white-key" data-key="87">
+                        <span class="note-label">D</span>
+                        <span class="key-label">W</span>
+                    </div>
+                    <div class="key white-key" data-key="69">
+                        <span class="note-label">E</span>
+                        <span class="key-label">E</span>
+                    </div>
+                    <div class="key white-key" data-key="82">
+                        <span class="note-label">F</span>
+                        <span class="key-label">R</span>
+                    </div>
+                    <div class="key white-key" data-key="84">
+                        <span class="note-label">G</span>
+                        <span class="key-label">T</span>
+                    </div>
+                    <div class="key white-key" data-key="89">
+                        <span class="note-label">A</span>
+                        <span class="key-label">Y</span>
+                    </div>
+                    <div class="key white-key" data-key="85">
+                        <span class="note-label">B</span>
+                        <span class="key-label">U</span>
+                    </div>
+
+                    <!-- Black Keys -->
+                    <div class="key black-key" data-key="83">
+                        <span class="note-label">C#</span>
+                        <span class="key-label">S</span>
+                    </div>
+                    <div class="key black-key" data-key="68">
+                        <span class="note-label">D#</span>
+                        <span class="key-label">D</span>
+                    </div>
+                    <div class="key black-key" data-key="71">
+                        <span class="note-label">F#</span>
+                        <span class="key-label">G</span>
+                    </div>
+                    <div class="key black-key" data-key="72">
+                        <span class="note-label">G#</span>
+                        <span class="key-label">H</span>
+                    </div>
+                    <div class="key black-key" data-key="74">
+                        <span class="note-label">A#</span>
+                        <span class="key-label">J</span>
+                    </div>
+                    <div class="key black-key" data-key="50">
+                        <span class="note-label">C#</span>
+                        <span class="key-label">2</span>
+                    </div>
+                    <div class="key black-key" data-key="51">
+                        <span class="note-label">D#</span>
+                        <span class="key-label">3</span>
+                    </div>
+                    <div class="key black-key" data-key="53">
+                        <span class="note-label">F#</span>
+                        <span class="key-label">5</span>
+                    </div>
+                    <div class="key black-key" data-key="54">
+                        <span class="note-label">G#</span>
+                        <span class="key-label">6</span>
+                    </div>
+                    <div class="key black-key" data-key="55">
+                        <span class="note-label">A#</span>
+                        <span class="key-label">7</span>
+                    </div>
+                </div>
             </div>
-            <div class="key black-key" data-key="50">
-                <span class="note-label">C#</span>
-                <span class="key-label">2</span>
+
+            <!-- Waveform Selection (close below keyboard) -->
+            <div class="keyboard-bottom-controls">
+                <button class="waveform-btn active" data-waveform="sine">SINE</button>
+                <button class="waveform-btn" data-waveform="square">SQUARE</button>
+                <button class="waveform-btn" data-waveform="sawtooth">SAWTOOTH</button>
+                <button class="waveform-btn" data-waveform="triangle">TRIANGLE</button>
             </div>
-            <div class="key black-key" data-key="51">
-                <span class="note-label">D#</span>
-                <span class="key-label">3</span>
-            </div>
-            <div class="key black-key" data-key="53">
-                <span class="note-label">F#</span>
-                <span class="key-label">5</span>
-            </div>
-            <div class="key black-key" data-key="54">
-                <span class="note-label">G#</span>
-                <span class="key-label">6</span>
-            </div>
-            <div class="key black-key" data-key="55">
-                <span class="note-label">A#</span>
-                <span class="key-label">7</span>
+        </div>
+
+        <!-- Right Side: ADSR Envelope -->
+        <div class="right-side-controls">
+            <div class="control-section">
+                <h3>ADSR</h3>
+                
+                <!-- Mini ADSR Visualization -->
+                <div class="adsr-visual">
+                    <svg width="160" height="100" viewBox="0 0 160 100">
+                        <defs>
+                            <linearGradient id="envelopeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:rgba(150, 180, 255, 0.8);stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:rgba(150, 180, 255, 0.2);stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Background grid -->
+                        <g stroke="rgba(255,255,255,0.1)" stroke-width="1" fill="none">
+                            <line x1="0" y1="20" x2="160" y2="20"/>
+                            <line x1="0" y1="40" x2="160" y2="40"/>
+                            <line x1="0" y1="60" x2="160" y2="60"/>
+                            <line x1="0" y1="80" x2="160" y2="80"/>
+                            <line x1="40" y1="0" x2="40" y2="100"/>
+                            <line x1="80" y1="0" x2="80" y2="100"/>
+                            <line x1="120" y1="0" x2="120" y2="100"/>
+                        </g>
+                        <!-- ADSR Envelope Path -->
+                        <path id="adsr-path" d="M 8 80 L 32 16 L 64 48 L 112 48 L 152 80" 
+                              stroke="rgba(150, 180, 255, 1)" 
+                              stroke-width="2" 
+                              fill="url(#envelopeGradient)"
+                              opacity="0.8"/>
+                        <!-- Labels -->
+                        <text x="20" y="95" fill="rgba(255,255,255,0.7)" font-size="9" text-anchor="middle">A</text>
+                        <text x="48" y="95" fill="rgba(255,255,255,0.7)" font-size="9" text-anchor="middle">D</text>
+                        <text x="88" y="95" fill="rgba(255,255,255,0.7)" font-size="9" text-anchor="middle">S</text>
+                        <text x="132" y="95" fill="rgba(255,255,255,0.7)" font-size="9" text-anchor="middle">R</text>
+                    </svg>
+                </div>
+
+                <div class="parameter-control">
+                    <label>attack: <span class="parameter-value" id="attack-value">0.01</span>s</label>
+                    <input type="range" id="attack" min="0.001" max="1" step="0.01" value="0.01">
+                </div>
+                <div class="parameter-control">
+                    <label>decay: <span class="parameter-value" id="decay-value">0.10</span>s</label>
+                    <input type="range" id="decay" min="0.001" max="2" step="0.01" value="0.1">
+                </div>
+                <div class="parameter-control">
+                    <label>sustain: <span class="parameter-value" id="sustain-value">0.60</span></label>
+                    <input type="range" id="sustain" min="0" max="1" step="0.01" value="0.6">
+                </div>
+                <div class="parameter-control">
+                    <label>release: <span class="parameter-value" id="release-value">0.20</span>s</label>
+                    <input type="range" id="release" min="0.01" max="3" step="0.01" value="0.2">
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="controls">
-        <button class="waveform-btn active" data-waveform="sine">SINE</button>
-        <button class="waveform-btn" data-waveform="square">SQUARE</button>
-        <button class="waveform-btn" data-waveform="sawtooth">SAWTOOTH</button>
-        <button class="waveform-btn" data-waveform="triangle">TRIANGLE</button>
-    </div>
-    
-
-    <script src="keyboard.js"></script>
+    <script type="module" src="keyboard.js"></script>
     <script src="title.js" defer></script>
     <script>
         const auraContainer = document.getElementById('auraContainer');
 
-        // Map each key to a specific rainbow color
         const keyColors = {
-            // Lower octave (Z-M)
-            '90': 'radial-gradient(circle, rgba(255, 0, 0, 0.6) 0%, rgba(255, 0, 0, 0.3) 40%, rgba(255, 0, 0, 0) 70%)', // C - Red
-            '83': 'radial-gradient(circle, rgba(255, 80, 0, 0.6) 0%, rgba(255, 80, 0, 0.3) 40%, rgba(255, 80, 0, 0) 70%)', // C# - Red-Orange
-            '88': 'radial-gradient(circle, rgba(255, 154, 0, 0.6) 0%, rgba(255, 154, 0, 0.3) 40%, rgba(255, 154, 0, 0) 70%)', // D - Orange
-            '68': 'radial-gradient(circle, rgba(255, 205, 0, 0.6) 0%, rgba(255, 205, 0, 0.3) 40%, rgba(255, 205, 0, 0) 70%)', // D# - Yellow-Orange
-            '67': 'radial-gradient(circle, rgba(255, 255, 0, 0.6) 0%, rgba(255, 255, 0, 0.3) 40%, rgba(255, 255, 0, 0) 70%)', // E - Yellow
-            '86': 'radial-gradient(circle, rgba(150, 255, 0, 0.6) 0%, rgba(150, 255, 0, 0.3) 40%, rgba(150, 255, 0, 0) 70%)', // F - Yellow-Green
-            '71': 'radial-gradient(circle, rgba(0, 255, 0, 0.6) 0%, rgba(0, 255, 0, 0.3) 40%, rgba(0, 255, 0, 0) 70%)', // F# - Green
-            '66': 'radial-gradient(circle, rgba(0, 255, 150, 0.6) 0%, rgba(0, 255, 150, 0.3) 40%, rgba(0, 255, 150, 0) 70%)', // G - Green-Cyan
-            '72': 'radial-gradient(circle, rgba(0, 200, 255, 0.6) 0%, rgba(0, 200, 255, 0.3) 40%, rgba(0, 200, 255, 0) 70%)', // G# - Cyan
-            '78': 'radial-gradient(circle, rgba(0, 100, 255, 0.6) 0%, rgba(0, 100, 255, 0.3) 40%, rgba(0, 100, 255, 0) 70%)', // A - Blue
-            '74': 'radial-gradient(circle, rgba(75, 0, 230, 0.6) 0%, rgba(75, 0, 230, 0.3) 40%, rgba(75, 0, 230, 0) 70%)', // A# - Indigo
-            '77': 'radial-gradient(circle, rgba(148, 0, 211, 0.6) 0%, rgba(148, 0, 211, 0.3) 40%, rgba(148, 0, 211, 0) 70%)', // B - Violet
-            
-            // Upper octave (Q-U)
-            '81': 'radial-gradient(circle, rgba(255, 0, 0, 0.6) 0%, rgba(255, 0, 0, 0.3) 40%, rgba(255, 0, 0, 0) 70%)', // C - Red
-            '50': 'radial-gradient(circle, rgba(255, 80, 0, 0.6) 0%, rgba(255, 80, 0, 0.3) 40%, rgba(255, 80, 0, 0) 70%)', // C# - Red-Orange
-            '87': 'radial-gradient(circle, rgba(255, 154, 0, 0.6) 0%, rgba(255, 154, 0, 0.3) 40%, rgba(255, 154, 0, 0) 70%)', // D - Orange
-            '51': 'radial-gradient(circle, rgba(255, 205, 0, 0.6) 0%, rgba(255, 205, 0, 0.3) 40%, rgba(255, 205, 0, 0) 70%)', // D# - Yellow-Orange
-            '69': 'radial-gradient(circle, rgba(255, 255, 0, 0.6) 0%, rgba(255, 255, 0, 0.3) 40%, rgba(255, 255, 0, 0) 70%)', // E - Yellow
-            '82': 'radial-gradient(circle, rgba(150, 255, 0, 0.6) 0%, rgba(150, 255, 0, 0.3) 40%, rgba(150, 255, 0, 0) 70%)', // F - Yellow-Green
-            '53': 'radial-gradient(circle, rgba(0, 255, 0, 0.6) 0%, rgba(0, 255, 0, 0.3) 40%, rgba(0, 255, 0, 0) 70%)', // F# - Green
-            '84': 'radial-gradient(circle, rgba(0, 255, 150, 0.6) 0%, rgba(0, 255, 150, 0.3) 40%, rgba(0, 255, 150, 0) 70%)', // G - Green-Cyan
-            '54': 'radial-gradient(circle, rgba(0, 200, 255, 0.6) 0%, rgba(0, 200, 255, 0.3) 40%, rgba(0, 200, 255, 0) 70%)', // G# - Cyan
-            '89': 'radial-gradient(circle, rgba(0, 100, 255, 0.6) 0%, rgba(0, 100, 255, 0.3) 40%, rgba(0, 100, 255, 0) 70%)', // A - Blue
-            '55': 'radial-gradient(circle, rgba(75, 0, 230, 0.6) 0%, rgba(75, 0, 230, 0.3) 40%, rgba(75, 0, 230, 0) 70%)', // A# - Indigo
-            '85': 'radial-gradient(circle, rgba(148, 0, 211, 0.6) 0%, rgba(148, 0, 211, 0.3) 40%, rgba(148, 0, 211, 0) 70%)', // B - Violet
+            '90': 'radial-gradient(circle, rgba(255, 0, 0, 0.6) 0%, rgba(255, 0, 0, 0.3) 40%, rgba(255, 0, 0, 0) 70%)',
+            '83': 'radial-gradient(circle, rgba(255, 80, 0, 0.6) 0%, rgba(255, 80, 0, 0.3) 40%, rgba(255, 80, 0, 0) 70%)',
+            '88': 'radial-gradient(circle, rgba(255, 154, 0, 0.6) 0%, rgba(255, 154, 0, 0.3) 40%, rgba(255, 154, 0, 0) 70%)',
+            '68': 'radial-gradient(circle, rgba(255, 205, 0, 0.6) 0%, rgba(255, 205, 0, 0.3) 40%, rgba(255, 205, 0, 0) 70%)',
+            '67': 'radial-gradient(circle, rgba(255, 255, 0, 0.6) 0%, rgba(255, 255, 0, 0.3) 40%, rgba(255, 255, 0, 0) 70%)',
+            '86': 'radial-gradient(circle, rgba(150, 255, 0, 0.6) 0%, rgba(150, 255, 0, 0.3) 40%, rgba(150, 255, 0, 0) 70%)',
+            '71': 'radial-gradient(circle, rgba(0, 255, 0, 0.6) 0%, rgba(0, 255, 0, 0.3) 40%, rgba(0, 255, 0, 0) 70%)',
+            '66': 'radial-gradient(circle, rgba(0, 255, 150, 0.6) 0%, rgba(0, 255, 150, 0.3) 40%, rgba(0, 255, 150, 0) 70%)',
+            '72': 'radial-gradient(circle, rgba(0, 200, 255, 0.6) 0%, rgba(0, 200, 255, 0.3) 40%, rgba(0, 200, 255, 0) 70%)',
+            '78': 'radial-gradient(circle, rgba(0, 100, 255, 0.6) 0%, rgba(0, 100, 255, 0.3) 40%, rgba(0, 100, 255, 0) 70%)',
+            '74': 'radial-gradient(circle, rgba(75, 0, 230, 0.6) 0%, rgba(75, 0, 230, 0.3) 40%, rgba(75, 0, 230, 0) 70%)',
+            '77': 'radial-gradient(circle, rgba(148, 0, 211, 0.6) 0%, rgba(148, 0, 211, 0.3) 40%, rgba(148, 0, 211, 0) 70%)',
+            '81': 'radial-gradient(circle, rgba(255, 0, 0, 0.6) 0%, rgba(255, 0, 0, 0.3) 40%, rgba(255, 0, 0, 0) 70%)',
+            '50': 'radial-gradient(circle, rgba(255, 80, 0, 0.6) 0%, rgba(255, 80, 0, 0.3) 40%, rgba(255, 80, 0, 0) 70%)',
+            '87': 'radial-gradient(circle, rgba(255, 154, 0, 0.6) 0%, rgba(255, 154, 0, 0.3) 40%, rgba(255, 154, 0, 0) 70%)',
+            '51': 'radial-gradient(circle, rgba(255, 205, 0, 0.6) 0%, rgba(255, 205, 0, 0.3) 40%, rgba(255, 205, 0, 0) 70%)',
+            '69': 'radial-gradient(circle, rgba(255, 255, 0, 0.6) 0%, rgba(255, 255, 0, 0.3) 40%, rgba(255, 255, 0, 0) 70%)',
+            '82': 'radial-gradient(circle, rgba(150, 255, 0, 0.6) 0%, rgba(150, 255, 0, 0.3) 40%, rgba(150, 255, 0, 0) 70%)',
+            '53': 'radial-gradient(circle, rgba(0, 255, 0, 0.6) 0%, rgba(0, 255, 0, 0.3) 40%, rgba(0, 255, 0, 0) 70%)',
+            '84': 'radial-gradient(circle, rgba(0, 255, 150, 0.6) 0%, rgba(0, 255, 150, 0.3) 40%, rgba(0, 255, 150, 0) 70%)',
+            '54': 'radial-gradient(circle, rgba(0, 200, 255, 0.6) 0%, rgba(0, 200, 255, 0.3) 40%, rgba(0, 200, 255, 0) 70%)',
+            '89': 'radial-gradient(circle, rgba(0, 100, 255, 0.6) 0%, rgba(0, 100, 255, 0.3) 40%, rgba(0, 100, 255, 0) 70%)',
+            '55': 'radial-gradient(circle, rgba(75, 0, 230, 0.6) 0%, rgba(75, 0, 230, 0.3) 40%, rgba(75, 0, 230, 0) 70%)',
+            '85': 'radial-gradient(circle, rgba(148, 0, 211, 0.6) 0%, rgba(148, 0, 211, 0.3) 40%, rgba(148, 0, 211, 0) 70%)',
         };
 
         function createRainbowPulse(x, y, keyCode) {
@@ -556,20 +961,17 @@
             pulse.style.left = x + 'px';
             pulse.style.top = y + 'px';
             
-            // Set the color based on the key pressed
             if (keyColors[keyCode]) {
                 pulse.style.background = keyColors[keyCode];
             }
             
             auraContainer.appendChild(pulse);
             
-            // Remove the pulse after animation completes
             setTimeout(() => {
                 pulse.remove();
             }, 1200);
         }
 
-        // Trigger rainbow aura pulse on key press
         window.addEventListener('keydown', function(event) {
             const key = (event.detail || event.which).toString();
             const keyElement = document.querySelector(`[data-key="${key}"]`);
@@ -582,7 +984,6 @@
             }
         });
 
-        // Also trigger on mouse clicks
         document.querySelectorAll('.key').forEach(key => {
             key.addEventListener('mousedown', (e) => {
                 const keyCode = key.dataset.key;

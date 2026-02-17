@@ -1,4 +1,4 @@
-// title.js
+// title.js - Animates the title letters
 document.querySelectorAll(".title-text").forEach(el => {
     const letters = el.textContent.split("");
 
